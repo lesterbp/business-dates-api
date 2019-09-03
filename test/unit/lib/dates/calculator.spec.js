@@ -41,6 +41,15 @@ describe('#settlementDate', () => {
     expect(result.holidayDays).to.be.equal(3)
   })
 
+  it('calculates short delays with no weekend but with holiday at start of day', () => {
+    const result = settlementDate('2018-01-15T10:50:50Z', 2)
+    expect(result).to.be.not.null
+    expect(result.businessDate).to.be.equal('2018-01-17T10:50:50Z')
+    expect(result.totalDays).to.be.equal(3)
+    expect(result.weekendDays).to.be.equal(0)
+    expect(result.holidayDays).to.be.equal(1)
+  })
+
   it('should return null in case of invalid date', () => {
     const result = settlementDate('2018-12-25T00:00:00ABCD', 20)
     expect(result).to.be.null

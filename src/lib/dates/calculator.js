@@ -6,16 +6,17 @@ const { holidays } = require('../config/holidays')
 const TIME_FORMAT = "yyyy-LL-dd'T'HH:mm:ss'Z'"
 const TIME_ZONE = 'UTC'
 
-const numberOfHolidays = (
-  startDate, endDate, locale = 'america',
-) => holidays.reduce((total, holiday) => {
-  if (startDate <= holiday.date && endDate >= holiday.date
-    && holiday.locale === locale.toLowerCase()) {
-    return total + 1
-  }
-
-  return total
-}, 0)
+const numberOfHolidays = (startDate, endDate, locale = 'america') => {
+  const adjustedStart = DateTime.fromISO(startDate.toISODate())
+  return holidays.reduce((total, holiday) => {
+    if (adjustedStart <= holiday.date && endDate >= holiday.date
+      && holiday.locale === locale.toLowerCase()) {
+      return total + 1
+    }
+  
+    return total
+  }, 0)
+}
 
 const adjustDateForHolidays = (startDate, endDate, previousHolidayDays = 0) => {
   const holidaysDays = numberOfHolidays(startDate, endDate)
