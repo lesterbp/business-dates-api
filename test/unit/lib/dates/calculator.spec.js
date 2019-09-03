@@ -1,6 +1,9 @@
 const { describe, it } = require('mocha')
 const { expect } = require('chai')
+const { getLogger } = require('../../../../src/lib/logging/logger')
 const { settlementDate } = require('../../../../src/lib/dates/calculator')
+
+getLogger({ level: 'error' }) // only log errors
 
 describe('#settlementDate', () => {
   it('calculates short delays with weekend and holiday', () => {

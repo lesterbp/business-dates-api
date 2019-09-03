@@ -5,8 +5,8 @@ let loggerIntance
 exports.getLogger = (options = {}) => {
   if (!loggerIntance) {
     loggerIntance = bunyan.createLogger({
-      name: process.env.APP_NAME,
-      level: process.env.LOG_LEVEL,
+      name: process.env.APP_NAME || 'default app name',
+      level: process.env.LOG_LEVEL || 'debug',
       ...options,
     })
   }
