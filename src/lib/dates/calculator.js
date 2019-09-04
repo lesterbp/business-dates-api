@@ -25,7 +25,7 @@ exports.settlementDate = (initialDate, delay = 1, locale) => {
   const log = getLogger()
 
   log.debug('settlementDate: starting calculation', {
-    params: { initialDate, delay },
+    params: { initialDate, delay, locale },
   })
 
   const luxInitDate = DateTime.fromISO(initialDate)

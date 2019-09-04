@@ -20,9 +20,19 @@ describe('#numberOfHolidays', () => {
     const result = numberOfHolidays('2018-01-01', '2018-02-19')
     expect(result).to.be.equal(3)
   })
+
+  it('throws if invalid start date', () => {
+    const fn = () => numberOfHolidays('2018-01-01aaa', '2018-02-19')
+    expect(fn).to.throw()
+  })
+
+  it('throws if invalid end date', () => {
+    const fn = () => numberOfHolidays('2018-01-01', '2018-02-19aaa')
+    expect(fn).to.throw()
+  })
 })
 
-describe('#numberOfHolidays', () => {
+describe('#isDateHoliday', () => {
   it('returns true if holiday', () => {
     const result = isDateHoliday('2018-01-15')
     expect(result).to.be.true
@@ -42,6 +52,11 @@ describe('#numberOfHolidays', () => {
     const result = isDateHoliday('2018-01-15', 'america')
     expect(result).to.be.true
   })
+
+  it('throws if invalid date', () => {
+    const fn = () => isDateHoliday('2018-01-15aaa', 'america')
+    expect(fn).to.throw()
+  })
 })
 
 describe('#isDateBusinessDay', () => {
@@ -58,5 +73,10 @@ describe('#isDateBusinessDay', () => {
   it('returns false if weekend', () => {
     const result = isDateBusinessDay('2018-01-14')
     expect(result).to.be.false
+  })
+
+  it('throws if invalid date', () => {
+    const fn = () => isDateBusinessDay('2018-01-15aaa')
+    expect(fn).to.throw()
   })
 })
