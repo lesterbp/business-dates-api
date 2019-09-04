@@ -24,35 +24,30 @@ const adjustEndDateForHolidays = (startDate, endDate, locale, previousHolidayDay
 exports.settlementDate = (initialDate, delay = 0, locale) => {
   const log = getLogger()
 
-  try {
-    log.debug('settlementDate: starting calculation', {
-      params: { initialDate, delay },
-    })
+  log.debug('settlementDate: starting calculation', {
+    params: { initialDate, delay },
+  })
 
-    const luxInitDate = DateTime.fromISO(initialDate)
-    if (!luxInitDate.isValid) {
-      throw new Error('invalid initialDate')
-    }
+  const luxInitDate = DateTime.fromISO(initialDate)
+  if (!luxInitDate.isValid) {
+    throw new Error('invalid initialDate')
+  }
 
-    const isStartDateWeekend = bizniz.isWeekendDay(luxInitDate.toJSDate())
-    const weekendAdjustment = isStartDateWeekend ? 1 : 0
-    const adjustedDelay = delay - 1 + weekendAdjustment // delays include the current day
+  const isStartDateWeekend = bizniz.isWeekendDay(luxInitDate.toJSDate())
+  const weekendAdjustment = isStartDateWeekend ? 1 : 0
+  const adjustedDelay = delay - 1 + weekendAdjustment // delays include the current day
 
-    const resultDate = bizniz.addWeekDays(luxInitDate.toJSDate(), adjustedDelay)
-    let luxResultDate = DateTime.fromJSDate(resultDate).setZone(TIME_ZONE)
-    luxResultDate = adjustEndDateForHolidays(luxInitDate, luxResultDate, locale)
+  const resultDate = bizniz.addWeekDays(luxInitDate.toJSDate(), adjustedDelay)
+  let luxResultDate = DateTime.fromJSDate(resultDate).setZone(TIME_ZONE)
+  luxResultDate = adjustEndDateForHolidays(luxInitDate, luxResultDate, locale)
 
-    const weekendDays = bizniz.weekendDaysBetween(luxInitDate.toJSDate(), luxResultDate.toJSDate())
-    const totalDays = luxResultDate.diff(luxInitDate, 'days').days + 1 // to include current day
-    const holidayDays = numberOfHolidays(luxInitDate.toISODate(), luxResultDate.toISODate(), locale)
-    return {
-      businessDate: luxResultDate.toFormat(TIME_FORMAT),
-      totalDays,
-      weekendDays,
-      holidayDays,
-    }
-  } catch (e) {
-    log.error('settlementDate: encountered error, returning null', { errorMessage: e.message })
-    return null
+  const weekendDays = bizniz.weekendDaysBetween(luxInitDate.toJSDate(), luxResultDate.toJSDate())
+  const totalDays = luxResultDate.diff(luxInitDate, 'days').days + 1 // to include current day
+  const holidayDays = numberOfHolidays(luxInitDate.toISODate(), luxResultDate.toISODate(), locale)
+  return {
+    businessDate: luxResultDate.toFormat(TIME_FORMAT),
+    totalDays,
+    weekendDays,
+    holidayDays,
   }
 }

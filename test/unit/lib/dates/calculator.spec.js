@@ -50,8 +50,8 @@ describe('#settlementDate', () => {
     expect(result.holidayDays).to.be.equal(1)
   })
 
-  it('should return null in case of invalid date', () => {
-    const result = settlementDate('2018-12-25T00:00:00ABCD', 20)
-    expect(result).to.be.null
+  it('should throw in case of invalid date', () => {
+    const fn = () => settlementDate('2018-12-25T00:00:00ABCD', 20)
+    expect(fn).to.throw()
   })
 })
