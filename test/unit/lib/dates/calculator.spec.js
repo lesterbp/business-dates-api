@@ -54,4 +54,9 @@ describe('#settlementDate', () => {
     const fn = () => settlementDate('2018-12-25T00:00:00ABCD', 20)
     expect(fn).to.throw()
   })
+
+  it('calculates 0 delay', () => {
+    const fn = () => settlementDate('2018-01-16T10:10:10Z', 0)
+    expect(fn).to.throw()
+  })
 })

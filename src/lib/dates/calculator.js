@@ -21,7 +21,7 @@ const adjustEndDateForHolidays = (startDate, endDate, locale, previousHolidayDay
   return endDate
 }
 
-exports.settlementDate = (initialDate, delay = 0, locale) => {
+exports.settlementDate = (initialDate, delay = 1, locale) => {
   const log = getLogger()
 
   log.debug('settlementDate: starting calculation', {
@@ -31,6 +31,10 @@ exports.settlementDate = (initialDate, delay = 0, locale) => {
   const luxInitDate = DateTime.fromISO(initialDate)
   if (!luxInitDate.isValid) {
     throw new Error('invalid initialDate')
+  }
+
+  if (delay < 1) {
+    throw new Error('Delay should at least be 1')
   }
 
   const isStartDateWeekend = bizniz.isWeekendDay(luxInitDate.toJSDate())
