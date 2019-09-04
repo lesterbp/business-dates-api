@@ -5,7 +5,9 @@ const { isDateBusinessDay } = require('../dates/holiday')
 
 exports.processSettlementDate = (pubSub, data) => {
   const log = getLogger()
-  const { messageId, initialDate, delay, locale } = data
+  const {
+    messageId, initialDate, delay, locale,
+  } = data
   let processResult
 
   try {
@@ -23,7 +25,7 @@ exports.processSettlementDate = (pubSub, data) => {
 
   pubSub.publish('businessDates.getBusinessDateWithDelay.response', {
     messageId,
-    ...processResult
+    ...processResult,
   })
 }
 
@@ -40,7 +42,6 @@ exports.processIsDateBusinessDay = (pubSub, data) => {
   } catch (e) {
     log.error('pubSub:processIsDateBusinessDay: encountered error', { errorMessage: e.message })
 
-    statusCode = 404
     processResult = formatResponse({
       date, locale,
     }, null, e.message)
@@ -48,6 +49,6 @@ exports.processIsDateBusinessDay = (pubSub, data) => {
 
   pubSub.publish('businessDates.isDateBusinessDay.response', {
     messageId,
-    ...processResult
+    ...processResult,
   })
 }
