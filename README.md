@@ -20,3 +20,4 @@ API to Calculate Business Dates
 # testing and linting
 - `npm run linter` to run the linter (check code styles and search for errors)
 - `npm test` to run unit tests
+- `npm run integrationTest` to run integration test of subscribing and publishing functionality (only way to test PubSub functionality for now)

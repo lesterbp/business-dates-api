@@ -7,7 +7,8 @@
     "start": "NODE_ENV=production node src/app",
     "dev": "./node_modules/.bin/node-dev src/app",
     "linter": "./node_modules/.bin/eslint src",
-    "test": "mocha --recursive test/unit"
+    "test": "mocha --recursive test/unit",
+    "integrationTest": "mocha --recursive test/integration"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,8 @@
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "luxon": "^1.17.2",
-    "postal": "^2.0.5"
+    "postal": "^2.0.5",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",

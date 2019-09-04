@@ -3,12 +3,10 @@ const { formatResponse } = require('../formatters/response')
 const { settlementDate } = require('../dates/calculator')
 const { isDateBusinessDay } = require('../dates/holiday')
 
-exports.processSettlementDate = (req, res) => {
+exports.processSettlementDate = (pubSub, data) => {
   const log = getLogger()
-  const paramSource = req.method === 'GET' ? req.params : req.body
-  const { initialDate, delay, locale } = paramSource
+  const { messageId, initialDate, delay, locale } = data
   let processResult
-  let statusCode = 200
 
   try {
     const result = settlementDate(initialDate, delay, locale)
@@ -16,23 +14,23 @@ exports.processSettlementDate = (req, res) => {
       initialDate, delay, locale,
     }, result)
   } catch (e) {
-    log.error('rest:processSettlementDate: encountered error', { errorMessage: e.message })
+    log.error('pubSub:processSettlementDate: encountered error', { errorMessage: e.message })
 
-    statusCode = 404
     processResult = formatResponse({
       initialDate, delay, locale,
     }, null, e.message)
   }
 
-  res.status(statusCode).json(processResult)
+  pubSub.publish('getBusinessDateWithDelay.response', {
+    messageId,
+    ...processResult
+  })
 }
 
-exports.processIsDateBusinessDay = (req, res) => {
+exports.processIsDateBusinessDay = (pubSub, data) => {
   const log = getLogger()
-  const paramSource = req.method === 'GET' ? req.params : req.body
-  const { date, locale } = paramSource
+  const { messageId, date, locale } = data
   let processResult
-  let statusCode = 200
 
   try {
     const result = isDateBusinessDay(date, locale)
@@ -40,7 +38,7 @@ exports.processIsDateBusinessDay = (req, res) => {
       date, locale,
     }, result)
   } catch (e) {
-    log.error('rest:processIsDateBusinessDay: encountered error', { errorMessage: e.message })
+    log.error('pubSub:processIsDateBusinessDay: encountered error', { errorMessage: e.message })
 
     statusCode = 404
     processResult = formatResponse({
@@ -48,5 +46,8 @@ exports.processIsDateBusinessDay = (req, res) => {
     }, null, e.message)
   }
 
-  res.status(statusCode).json(processResult)
+  pubSub.publish('isDateBusinessDay.response', {
+    messageId,
+    ...processResult
+  })
 }
