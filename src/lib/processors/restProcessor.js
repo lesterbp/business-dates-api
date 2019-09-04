@@ -13,14 +13,14 @@ exports.processSettlementDate = (req, res) => {
   try {
     const result = settlementDate(initialDate, delay, locale)
     processResult = formatResponse({
-      initialDate, delay, locale
+      initialDate, delay, locale,
     }, result)
   } catch (e) {
     log.error('processSettlementDate: encountered error', { errorMessage: e.message })
 
     statusCode = 404
     processResult = formatResponse({
-      initialDate, delay, locale
+      initialDate, delay, locale,
     }, null, e.message)
   }
 
@@ -37,14 +37,14 @@ exports.processIsDateBusinessDay = (req, res) => {
   try {
     const result = isDateBusinessDay(date, locale)
     processResult = formatResponse({
-      date, locale
+      date, locale,
     }, result)
   } catch (e) {
     log.error('processIsDateBusinessDay: encountered error', { errorMessage: e.message })
 
     statusCode = 404
     processResult = formatResponse({
-      date, locale
+      date, locale,
     }, null, e.message)
   }
 

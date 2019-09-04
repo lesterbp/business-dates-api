@@ -7,7 +7,7 @@ exports.formatResponse = (reqParam, results = {}, errorMsg = '') => {
   return {
     ok: !errorMsg,
     initialQuery: {
-      ...reqParam
+      ...reqParam,
     },
     ...(!errorMsg && { results }),
     ...(errorMsg && { error }),
