@@ -21,7 +21,7 @@ exports.processSettlementDate = (pubSub, data) => {
     }, null, e.message)
   }
 
-  pubSub.publish('getBusinessDateWithDelay.response', {
+  pubSub.publish('businessDates.getBusinessDateWithDelay.response', {
     messageId,
     ...processResult
   })
@@ -46,7 +46,7 @@ exports.processIsDateBusinessDay = (pubSub, data) => {
     }, null, e.message)
   }
 
-  pubSub.publish('isDateBusinessDay.response', {
+  pubSub.publish('businessDates.isDateBusinessDay.response', {
     messageId,
     ...processResult
   })

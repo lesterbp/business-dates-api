@@ -7,21 +7,21 @@ const setupSubscriptions = (pubSub) => {
   log.info('subscriptions: setting subscriptions')
 
   pubSub.subscribe(
-    'getBusinessDateWithDelay.request',
+    'businessDates.getBusinessDateWithDelay.request',
     (data, envelope) => pubSubProcessor.processSettlementDate(pubSub, data, envelope),
   )
 
   pubSub.subscribe(
-    'isDateBusinessDay.request',
+    'businessDates.isDateBusinessDay.request',
     (data, envelope) => pubSubProcessor.processIsDateBusinessDay(pubSub, data, envelope),
   )
 }
 
 exports.startPubSub = () => {
   const log = getLogger()
-  log.info('subscriptions: setting up channel', { channelName: process.env.APP_NAME })
+  log.info('subscriptions: setting up channel', { channelName: process.env.PUBSUB_CHANNEL })
 
-  const channel = postal.channel(process.env.APP_NAME)
+  const channel = postal.channel(process.env.PUBSUB_CHANNEL)
   setupSubscriptions(channel)
 
   return channel

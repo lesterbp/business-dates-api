@@ -16,7 +16,7 @@ describe('testing subscribing and publishing', () => {
   describe('#getBusinessDateWithDelay', () => {
     it('publishes response', (done) => {
       const messageId = uuidv4()
-      channel.subscribe('getBusinessDateWithDelay.response', (data) => {
+      channel.subscribe('businessDates.getBusinessDateWithDelay.response', (data) => {
         console.log('\npublished response:\n', data, '\n\n')
 
         expect(data).to.have.all.keys('messageId', 'ok', 'initialQuery', 'results')
@@ -25,7 +25,7 @@ describe('testing subscribing and publishing', () => {
         done()
       })
 
-      channel.publish('getBusinessDateWithDelay.request', {
+      channel.publish('businessDates.getBusinessDateWithDelay.request', {
         messageId,
         initialDate: '2018-01-15T00:00:00Z',
         delay: 3,
@@ -37,7 +37,7 @@ describe('testing subscribing and publishing', () => {
   describe('#isDateBusinessDay', () => {
     it('publishes response', (done) => {
       const messageId = uuidv4()
-      channel.subscribe('isDateBusinessDay.response', (data) => {
+      channel.subscribe('businessDates.isDateBusinessDay.response', (data) => {
         console.log('\npublished response:\n', data, '\n\n')
 
         expect(data).to.have.all.keys('messageId', 'ok', 'initialQuery', 'results')
@@ -46,7 +46,7 @@ describe('testing subscribing and publishing', () => {
         done()
       })
 
-      channel.publish('isDateBusinessDay.request', {
+      channel.publish('businessDates.isDateBusinessDay.request', {
         messageId,
         date: '2018-01-15',
         locale: 'america'
