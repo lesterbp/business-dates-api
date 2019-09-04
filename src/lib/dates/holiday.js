@@ -19,3 +19,8 @@ exports.isDateHoliday = (date, locale = 'america') => {
   const luxDate = DateTime.fromISO(`${date}T00:00:00Z`)
   return !!holidays.find(h => +h.date === +luxDate && h.locale === locale.toLowerCase())
 }
+
+exports.isDateBusinessDay = (date, locale = 'america') => {
+  const luxDate = DateTime.fromISO(`${date}T00:00:00Z`)
+  return luxDate.weekday <= 5 && !this.isDateHoliday(date, locale)
+}

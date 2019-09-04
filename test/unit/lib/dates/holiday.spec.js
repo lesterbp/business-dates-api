@@ -1,7 +1,7 @@
 const { describe, it } = require('mocha')
 const { expect } = require('chai')
 const { getLogger } = require('../../../../src/lib/logging/logger')
-const { numberOfHolidays, isDateHoliday } = require('../../../../src/lib/dates/holiday')
+const { numberOfHolidays, isDateHoliday, isDateBusinessDay } = require('../../../../src/lib/dates/holiday')
 
 getLogger({ level: 'error' }) // only log errors
 
@@ -41,5 +41,22 @@ describe('#numberOfHolidays', () => {
   it('returns true if holiday on locale', () => {
     const result = isDateHoliday('2018-01-15', 'america')
     expect(result).to.be.true
+  })
+})
+
+describe('#isDateBusinessDay', () => {
+  it('returns false if holiday', () => {
+    const result = isDateBusinessDay('2018-01-15')
+    expect(result).to.be.false
+  })
+
+  it('returns true if not a holiday and weekday', () => {
+    const result = isDateBusinessDay('2018-01-16')
+    expect(result).to.be.true
+  })
+
+  it('returns false if weekend', () => {
+    const result = isDateBusinessDay('2018-01-14')
+    expect(result).to.be.false
   })
 })
