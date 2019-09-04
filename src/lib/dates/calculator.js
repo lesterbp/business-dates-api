@@ -1,25 +1,13 @@
 const bizniz = require('bizniz').default
 const { DateTime } = require('luxon')
 const { getLogger } = require('../logging/logger')
-const { holidays } = require('../config/holidays')
+const { numberOfHolidays } = require('./holiday')
 
 const TIME_FORMAT = "yyyy-LL-dd'T'HH:mm:ss'Z'"
 const TIME_ZONE = 'UTC'
 
-const numberOfHolidays = (startDate, endDate, locale = 'america') => {
-  const adjustedStart = DateTime.fromISO(startDate.toISODate())
-  return holidays.reduce((total, holiday) => {
-    if (adjustedStart <= holiday.date && endDate >= holiday.date
-      && holiday.locale === locale.toLowerCase()) {
-      return total + 1
-    }
-  
-    return total
-  }, 0)
-}
-
-const adjustDateForHolidays = (startDate, endDate, previousHolidayDays = 0) => {
-  const holidaysDays = numberOfHolidays(startDate, endDate)
+const adjustEndDateForHolidays = (startDate, endDate, previousHolidayDays = 0) => {
+  const holidaysDays = numberOfHolidays(startDate.toISODate(), endDate.toISODate())
   const adjustmentNeeded = holidaysDays - previousHolidayDays
 
   if (adjustmentNeeded > 0) {
@@ -27,7 +15,7 @@ const adjustDateForHolidays = (startDate, endDate, previousHolidayDays = 0) => {
     newEndDate = DateTime.fromJSDate(newEndDate).setZone(TIME_ZONE)
 
     // doing recursive call in case there's new holiday when we added weekdays
-    return adjustDateForHolidays(startDate, newEndDate, holidaysDays)
+    return adjustEndDateForHolidays(startDate, newEndDate, holidaysDays)
   }
 
   return endDate
@@ -52,11 +40,11 @@ exports.settlementDate = (initialDate, delay = 0) => {
 
     const resultDate = bizniz.addWeekDays(luxInitDate.toJSDate(), adjustedDelay)
     let luxResultDate = DateTime.fromJSDate(resultDate).setZone(TIME_ZONE)
-    luxResultDate = adjustDateForHolidays(luxInitDate, luxResultDate)
+    luxResultDate = adjustEndDateForHolidays(luxInitDate, luxResultDate)
 
     const weekendDays = bizniz.weekendDaysBetween(luxInitDate.toJSDate(), luxResultDate.toJSDate())
     const totalDays = luxResultDate.diff(luxInitDate, 'days').days + 1 // to include current day
-    const holidayDays = numberOfHolidays(luxInitDate, luxResultDate)
+    const holidayDays = numberOfHolidays(luxInitDate.toISODate(), luxResultDate.toISODate())
     return {
       businessDate: luxResultDate.toFormat(TIME_FORMAT),
       totalDays,
